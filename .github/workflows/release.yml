@@ -28,7 +28,7 @@ jobs:
     - name: Build and push amd64 digest image 
       uses: rancher/ecm-distro-tools/actions/publish-image@master
       with:
-        image: hardened-traefik
+        image: traefik
         make-target: image-push-digest
         platforms: linux/amd64
         tag: ${{ github.event.release.tag_name }}
@@ -73,7 +73,7 @@ jobs:
     - name: Build and push arm64 digest image 
       uses: rancher/ecm-distro-tools/actions/publish-image@master
       with:
-        image: hardened-traefik
+        image: traefik
         make-target: image-push-digest
         platforms: linux/arm64
         tag: ${{ github.event.release.tag_name }}
@@ -129,7 +129,7 @@ jobs:
         uses: rancher/ecm-distro-tools/actions/publish-image@master
         with:
           make-target: manifest-push
-          image: hardened-traefik
+          image: traefik
           tag: ${{ github.event.release.tag_name }}
 
           public-repo: ${{ github.repository_owner }}
@@ -146,4 +146,4 @@ jobs:
 
       - name: Inspect image
         run: |
-          docker buildx imagetools inspect ${{ github.repository_owner }}/hardened-traefik:${{ github.event.release.tag_name }}
+          docker buildx imagetools inspect ${{ github.repository_owner }}/traefik:${{ github.event.release.tag_name }}
