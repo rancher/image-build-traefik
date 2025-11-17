@@ -14,7 +14,12 @@ endif
 REPO ?= rancher
 PKG ?= github.com/traefik/traefik/v3
 BUILD_META=-build$(shell date +%Y%m%d)
-TAG ?= $(if $(GITHUB_ACTION_TAG),$(GITHUB_ACTION_TAG),v3.5.0$(BUILD_META))
+TAG ?= ${GITHUB_ACTION_TAG}
+
+ifeq ($(TAG),)
+TAG := v3.5.0$(BUILD_META)
+endif
+
 ifeq (,$(filter %$(BUILD_META),$(TAG)))
 $(error TAG needs to end with build metadata: $(BUILD_META))
 endif
