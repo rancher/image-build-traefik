@@ -43,7 +43,8 @@ jobs:
         prime-registry: ${{ env.PRIME_REGISTRY }}
         prime-username: ${{ env.PRIME_REGISTRY_USERNAME }}
         prime-password: ${{ env.PRIME_REGISTRY_PASSWORD }}
-        push-to-prime: ${{ github.repository_owner == 'rancher' }}
+        # push-to-prime: ${{ github.repository_owner == 'rancher' }}
+        push-to-prime: false
 
     - name: Upload metadata files
       uses: actions/upload-artifact@v4
