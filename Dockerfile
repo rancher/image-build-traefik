@@ -38,6 +38,8 @@ RUN if [ "${TARGETARCH}" = "amd64" ]; then \
         go-assert-boring.sh bin/* ; \
     fi
 RUN install -s bin/* /usr/local/bin
+
+RUN adduser --uid 65532 traefik --system
 RUN traefik version
 
 FROM scratch
