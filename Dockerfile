@@ -11,6 +11,10 @@ RUN set -x && \
     curl \
     tar
 
+# set up nonroot user
+RUN addgroup -g 65532 nonroot && \
+    adduser -D -H -s /sbin/nologin -h /home/nonroot -G nonroot -u 65532 nonroot
+
 # setup the build
 ARG PKG
 ARG TAG
@@ -46,7 +50,7 @@ RUN traefik version
 
 FROM scratch
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=builder /etc/passwd /etc/passwd
+COPY --from=builder /etc/passwd /etc/group /etc/
 COPY --from=builder /usr/share/zoneinfo /usr/share/
 COPY --from=builder /usr/local/bin/traefik /
 
