@@ -15,6 +15,12 @@ sources:
        prerelease: false
      versionfilter:
        kind: semver
+ 
+ traefikSrcSha256:
+   name: Get traefik source tarball sha256
+   kind: shell
+   spec:
+     command: 'curl -fsSL "https://github.com/traefik/traefik/releases/download/{{ source "traefik" }}/traefik-{{ source "traefik" }}.src.tar.gz" | sha256sum | cut -d'' '' -f1'
 
 targets:
   makefile:
@@ -26,6 +32,16 @@ targets:
       file: Makefile
       matchpattern: '(?m)^TAG \:\= (.*)'
       replacepattern: 'TAG := {{ source "traefik" }}$$(BUILD_META)'
+
+  dockerfileSha:
+    name: "Bump traefik source tarball sha256 in Dockerfile"
+    kind: file
+    scmid: default
+    sourceid: traefikSrcSha256
+    spec:
+      file: Dockerfile
+      matchpattern: '(?m)^ARG TRAEFIK_SRC_SHA256="(.*)"'
+      replacepattern: 'ARG TRAEFIK_SRC_SHA256="{{ source "traefikSrcSha256" }}"'
 
 scms:
   default:
