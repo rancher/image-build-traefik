@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check out code
-      uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
     - name: "Read secrets"
       if: github.repository_owner == 'rancher'
@@ -29,7 +29,7 @@ jobs:
 
     # For forks, store docker credentials in GHA secrets
     - name: Build and push amd64 digest image 
-      uses: rancher/ecm-distro-tools/actions/publish-image@10ab39987d39be83da6a252c1c3b540e496e0287 # v0.66.0
+      uses: rancher/ecm-distro-tools/actions/publish-image@49656efa72e90062a70fac1a85ad121f4873a6a0 # v0.74.4
       with:
         image: hardened-traefik
         make-target: image-push-digest
@@ -47,7 +47,7 @@ jobs:
         push-to-prime: ${{ github.repository_owner == 'rancher' }}
 
     - name: Upload metadata files
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
       with:
         name: metadata-amd64
         path: metadata-*.json
@@ -61,7 +61,7 @@ jobs:
     runs-on: ubuntu-24.04-arm
     steps:
     - name: Check out code
-      uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
     - name: "Read secrets"
       if: github.repository_owner == 'rancher'
@@ -76,7 +76,7 @@ jobs:
     
     # For forks, store docker credentials in GHA secrets
     - name: Build and push arm64 digest image 
-      uses: rancher/ecm-distro-tools/actions/publish-image@10ab39987d39be83da6a252c1c3b540e496e0287 # v0.66.0
+      uses: rancher/ecm-distro-tools/actions/publish-image@49656efa72e90062a70fac1a85ad121f4873a6a0 # v0.74.4
       with:
         image: hardened-traefik
         make-target: image-push-digest
@@ -94,7 +94,7 @@ jobs:
         push-to-prime: ${{ github.repository_owner == 'rancher' }}
 
     - name: Upload metadata files
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
       with:
         name: metadata-arm64
         path: metadata-*.json
@@ -111,10 +111,10 @@ jobs:
       - build-arm64-digest
     steps:
       - name: Check out code
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Download metadata files
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           pattern: metadata-*
           merge-multiple: true
@@ -132,7 +132,7 @@ jobs:
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
           images: ${{ env.DOCKERHUB_REPO }}
 
@@ -149,7 +149,7 @@ jobs:
 
       - name: Create manifest list and push
         id: push-manifest
-        uses: rancher/ecm-distro-tools/actions/publish-image@10ab39987d39be83da6a252c1c3b540e496e0287 # v0.66.0
+        uses: rancher/ecm-distro-tools/actions/publish-image@49656efa72e90062a70fac1a85ad121f4873a6a0 # v0.74.4
         env:
           DOCKER_METADATA_OUTPUT_JSON: ${{ steps.meta.outputs.json }}
         with:
