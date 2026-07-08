@@ -19,7 +19,7 @@ RUN addgroup -g 65532 nonroot && \
 ARG PKG
 ARG TAG
 ARG TARGETARCH
-ARG TRAEFIK_SRC_SHA256="bc97effd53f3423cebc37c783472c2d09b94dd90a805cb95e26ded71eb2fc294"
+ARG TRAEFIK_SRC_SHA256="3c132806eddbe1dc894e7341dda05beb50936688b9e558b00c3a35dc300d353a"
 
 # Download and extract Release src tarball, we do this instead of cloning because the
 # static webui files are already generated and included in the tarball.
