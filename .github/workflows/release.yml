@@ -29,7 +29,7 @@ jobs:
 
     # For forks, store docker credentials in GHA secrets
     - name: Build and push amd64 digest image 
-      uses: rancher/ecm-distro-tools/actions/publish-image@49656efa72e90062a70fac1a85ad121f4873a6a0 # v0.74.4
+      uses: rancher/ecm-distro-tools/actions/publish-image@b558c3371d4a363f131e31a87d5c47dae2bbebe7 # v0.75.1
       with:
         image: hardened-traefik
         make-target: image-push-digest
@@ -76,7 +76,7 @@ jobs:
     
     # For forks, store docker credentials in GHA secrets
     - name: Build and push arm64 digest image 
-      uses: rancher/ecm-distro-tools/actions/publish-image@49656efa72e90062a70fac1a85ad121f4873a6a0 # v0.74.4
+      uses: rancher/ecm-distro-tools/actions/publish-image@b558c3371d4a363f131e31a87d5c47dae2bbebe7 # v0.75.1
       with:
         image: hardened-traefik
         make-target: image-push-digest
@@ -149,7 +149,7 @@ jobs:
 
       - name: Create manifest list and push
         id: push-manifest
-        uses: rancher/ecm-distro-tools/actions/publish-image@49656efa72e90062a70fac1a85ad121f4873a6a0 # v0.74.4
+        uses: rancher/ecm-distro-tools/actions/publish-image@b558c3371d4a363f131e31a87d5c47dae2bbebe7 # v0.75.1
         env:
           DOCKER_METADATA_OUTPUT_JSON: ${{ steps.meta.outputs.json }}
         with:
