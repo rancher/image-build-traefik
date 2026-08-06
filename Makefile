@@ -21,10 +21,8 @@ TAG := v3.7.10$(BUILD_META)
 endif
 
 ifeq (,$(filter %$(BUILD_META),$(TAG)))
-$(error TAG needs to end with build metadata: $(BUILD_META))
+$(error TAG $(TAG) needs to end with build metadata: $(BUILD_META))
 endif
-
-BTAG := $(shell echo $(TAG) | sed 's/-build.*//')
 
 .PHONY: image-build
 image-build:
@@ -33,7 +31,7 @@ image-build:
 		--platform=$(TARGET_PLATFORMS) \
 		--pull \
 		--build-arg PKG=$(PKG) \
-		--build-arg TAG=$(BTAG) \
+		--build-arg TAG=$(TAG:$(BUILD_META)=) \
 		--tag $(REPO)/hardened-traefik:$(TAG) \
 		--load .
 
@@ -49,7 +47,7 @@ image-push-digest:
 		--output type=image,push-by-digest=true,name-canonical=true,push=true \
 		--pull \
 		--build-arg PKG=$(PKG) \
-		--build-arg TAG=$(BTAG) \
+		--build-arg TAG=$(TAG:$(BUILD_META)=) \
 		--tag $(REPO)/hardened-traefik .
 
 .PHONY: image-push-prime-digest
@@ -75,8 +73,7 @@ endif
 .PHONY: log
 log:
 	@echo "TARGET_PLATFORMS=$(TARGET_PLATFORMS)"
-	@echo "TAG=$(TAG)"
-	@echo "BTAG=$(BTAG)"
+	@echo "TAG=$(TAG:$(BUILD_META)=)"
 	@echo "REPO=$(REPO)"
 	@echo "SRC=$(SRC)"
 	@echo "BUILD_META=$(BUILD_META)"

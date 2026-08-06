@@ -17,9 +17,10 @@ jobs:
       uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
     - name: Set the TAG value
-      id: get-TAG
       run: |
-        echo "$(make -s log | grep TAG)" >> "$GITHUB_ENV"
+        TAG=$(make -s log | grep '^TAG=' | cut -d '=' -f2)
+        BUILD_META=$(make -s log | grep '^BUILD_META=' | cut -d '=' -f2)
+        echo "TAG=${TAG}${BUILD_META}" >> "$GITHUB_ENV"
 
     - name: Build container image
       run: make image-build
@@ -47,9 +48,10 @@ jobs:
       uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
     - name: Set the TAG value
-      id: get-TAG
       run: |
-        echo "$(make -s log | grep TAG)" >> "$GITHUB_ENV"
+        TAG=$(make -s log | grep '^TAG=' | cut -d '=' -f2)
+        BUILD_META=$(make -s log | grep '^BUILD_META=' | cut -d '=' -f2)
+        echo "TAG=${TAG}${BUILD_META}" >> "$GITHUB_ENV"
 
     - name: Build container image
       run: make image-build

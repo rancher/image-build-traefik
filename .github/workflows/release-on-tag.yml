@@ -25,11 +25,9 @@ jobs:
       - name: Calculate release tag from Makefile defaults
         run: |
           TAG=$(make -s log | grep '^TAG=' | cut -d '=' -f2)
-          BTAG=$(make -s log | grep '^BTAG=' | cut -d '=' -f2)
           BUILD_META=$(make -s log | grep '^BUILD_META=' | cut -d '=' -f2)
           
           echo "TAG=${TAG}" >> "$GITHUB_ENV"
-          echo "BTAG=${BTAG}" >> "$GITHUB_ENV"
           echo "RELEASE_TAG=${TAG}" >> "$GITHUB_ENV"
 
       - name: Validate TAG change and release uniqueness
@@ -41,15 +39,15 @@ jobs:
 
           if [[ "${{ github.event_name }}" == "push" ]] && [[ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]]; then
             PREV_TAG=$(git show "${{ github.event.before }}:Makefile" 2>/dev/null | sed -n 's/^TAG := \(.*\)\$(BUILD_META)$/\1/p' | head -n1)
-            if [[ -n "$PREV_TAG" ]] && [[ "$PREV_TAG" == "$BTAG" ]]; then
-              echo "Makefile changed, but default TAG did not change ($BTAG); skipping release"
+            if [[ -n "$PREV_TAG" ]] && [[ "$PREV_TAG" == "$TAG" ]]; then
+              echo "Makefile changed, but default TAG did not change ($TAG); skipping release"
               SHOULD_RELEASE=false
             fi
           fi
 
-          EXISTING_TAG=$(gh release list --limit 200 --json tagName --jq '.[].tagName' | awk -v t="$BTAG" 'index($0, t "-build") == 1 {suffix = substr($0, length(t) + 7); if (length(suffix) == 8 && suffix ~ /^[0-9]+$/) {print; exit}}')
+          EXISTING_TAG=$(gh release list --limit 200 --json tagName --jq '.[].tagName' | awk -v t="$TAG" 'index($0, t "-build") == 1 {suffix = substr($0, length(t) + 7); if (length(suffix) == 8 && suffix ~ /^[0-9]+$/) {print; exit}}')
           if [[ -n "$EXISTING_TAG" ]]; then
-            echo "Release for upstream TAG $BTAG already exists as $EXISTING_TAG; skipping release"
+            echo "Release for upstream TAG $TAG already exists as $EXISTING_TAG; skipping release"
             SHOULD_RELEASE=false
           fi
 
