@@ -1,2 +1,5 @@
-/.github/workflows/ @rancher/k3s
-/updatecli/ @rancher/k3s
+# Global ownership
+* @rancher/k3s
+# Exceptions with no Ownership (automerge allowed)
+Dockerfile
+Makefile
