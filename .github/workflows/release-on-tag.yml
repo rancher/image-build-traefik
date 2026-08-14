@@ -1,4 +1,4 @@
-# This workflow automatically creates a GitHub release when the default TAG in the Makefile is updated on main.
+# This workflow automatically creates a GitHub release when the default TAG file is updated on main.
 # 99% of the time, from an UpdateCLI PR that bumps the TAG while tracking upstream.
 name: Release On Tag Update
 on:
@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - 'Makefile'
+      - 'TAG'
   workflow_dispatch:
 
 permissions:
@@ -22,7 +22,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Calculate release tag from Makefile defaults
+      - name: Calculate release tag from TAG file default
         run: |
           TAG=$(make -s log | grep '^TAG=' | cut -d '=' -f2)
           BUILD_META=$(make -s log | grep '^BUILD_META=' | cut -d '=' -f2)
@@ -38,9 +38,9 @@ jobs:
           SHOULD_RELEASE=true
 
           if [[ "${{ github.event_name }}" == "push" ]] && [[ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]]; then
-            PREV_TAG=$(git show "${{ github.event.before }}:Makefile" 2>/dev/null | sed -n 's/^TAG := \(.*\)\$(BUILD_META)$/\1/p' | head -n1)
+            PREV_TAG=$(git show "${{ github.event.before }}:TAG" 2>/dev/null)
             if [[ -n "$PREV_TAG" ]] && [[ "$PREV_TAG" == "$TAG" ]]; then
-              echo "Makefile changed, but default TAG did not change ($TAG); skipping release"
+              echo "TAG changed, but default TAG did not change ($TAG); skipping release"
               SHOULD_RELEASE=false
             fi
           fi
