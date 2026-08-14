@@ -12,7 +12,6 @@ ifndef TARGET_PLATFORMS
 endif
 
 REPO ?= rancher
-PKG ?= github.com/traefik/traefik/v3
 BUILD_META=-build$(shell date +%Y%m%d)
 TAG ?= ${GITHUB_ACTION_TAG}
 
@@ -30,7 +29,6 @@ image-build:
 		--progress=plain \
 		--platform=$(TARGET_PLATFORMS) \
 		--pull \
-		--build-arg PKG=$(PKG) \
 		--build-arg TAG=$(TAG:$(BUILD_META)=) \
 		--tag $(REPO)/hardened-traefik:$(TAG) \
 		--load .
@@ -46,7 +44,6 @@ image-push-digest:
 		--metadata-file metadata-$(subst /,-,$(REPO))-$(subst /,-,$(TARGET_PLATFORMS)).json \
 		--output type=image,push-by-digest=true,name-canonical=true,push=true \
 		--pull \
-		--build-arg PKG=$(PKG) \
 		--build-arg TAG=$(TAG:$(BUILD_META)=) \
 		--tag $(REPO)/hardened-traefik .
 

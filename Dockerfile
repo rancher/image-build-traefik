@@ -16,7 +16,7 @@ RUN addgroup -g 65532 nonroot && \
     adduser -D -H -s /sbin/nologin -h /home/nonroot -G nonroot -u 65532 nonroot
 
 # setup the build
-ARG PKG
+ARG PKG=github.com/traefik/traefik/v3
 ARG TAG
 ARG TARGETARCH
 ARG TRAEFIK_SRC_SHA256="31e0e2fbdccd3170b3bc5c3d233a08585bcbc5ede8f753d12a5999d69c21cdd6"
