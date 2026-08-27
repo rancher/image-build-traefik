@@ -16,11 +16,18 @@ BUILD_META=-build$(shell date +%Y%m%d)
 TAG ?= ${GITHUB_ACTION_TAG}
 
 ifeq ($(TAG),)
-TAG := $(shell cat TAG)$(BUILD_META)
+TAG := $(shell jq -r 'keys | map(select(test("^v[0-9]+\\.[0-9]+\\.[0-9]+$$"))) | sort_by(ltrimstr("v") | split(".") | map(tonumber)) | last' traefik-sources.json)$(BUILD_META)
 endif
 
 ifeq (,$(filter %$(BUILD_META),$(TAG)))
 $(error TAG $(TAG) needs to end with build metadata: $(BUILD_META))
+endif
+
+TRAEFIK_TAG := $(TAG:$(BUILD_META)=)
+TRAEFIK_SRC_SHA256 := $(shell jq -er --arg tag "$(TRAEFIK_TAG)" '.[$$tag]' traefik-sources.json 2>/dev/null)
+
+ifeq ($(TRAEFIK_SRC_SHA256),)
+$(error No SHA-256 found for Traefik tag $(TRAEFIK_TAG) in traefik-sources.json)
 endif
 
 .PHONY: image-build
@@ -30,6 +37,7 @@ image-build:
 		--platform=$(TARGET_PLATFORMS) \
 		--pull \
 		--build-arg TAG=$(TAG:$(BUILD_META)=) \
+		--build-arg TRAEFIK_SRC_SHA256=$(TRAEFIK_SRC_SHA256) \
 		--tag $(REPO)/hardened-traefik:$(TAG) \
 		--load .
 
@@ -45,6 +53,7 @@ image-push-digest:
 		--output type=image,push-by-digest=true,name-canonical=true,push=true \
 		--pull \
 		--build-arg TAG=$(TAG:$(BUILD_META)=) \
+		--build-arg TRAEFIK_SRC_SHA256=$(TRAEFIK_SRC_SHA256) \
 		--tag $(REPO)/hardened-traefik .
 
 .PHONY: image-push-prime-digest

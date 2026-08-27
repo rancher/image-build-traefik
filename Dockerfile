@@ -19,7 +19,7 @@ RUN addgroup -g 65532 nonroot && \
 ARG PKG=github.com/traefik/traefik/v3
 ARG TAG
 ARG TARGETARCH
-ARG TRAEFIK_SRC_SHA256="2626c9a767fea03f22870f6ba28b550e8061fb6ce4a563839ef8e55a206c20d3"
+ARG TRAEFIK_SRC_SHA256
 
 # Download and extract Release src tarball, we do this instead of cloning because the
 # static webui files are already generated and included in the tarball.

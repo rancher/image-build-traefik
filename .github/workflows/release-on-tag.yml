@@ -1,13 +1,12 @@
 # This workflow automatically creates a GitHub release when the default TAG file is updated on main.
-# 99% of the time, from an UpdateCLI PR that bumps the TAG while tracking upstream.
+# 99% of the time, from an UpdateCLI PR that adds a Traefik source while tracking upstream.
 name: Release On Tag Update
 on:
   push:
     branches:
       - main
     paths:
-      - 'TAG'
-      - 'Dockerfile'
+      - 'traefik-sources.json'
 
 permissions:
   contents: write
@@ -22,15 +21,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Calculate release tag from TAG file default
+      - name: Calculate release tag from added Traefik source
         run: |
-          TAG=$(make -s log | grep '^TAG=' | cut -d '=' -f2)
+          TAGS_BEFORE="$(git show "${{ github.event.before }}:traefik-sources.json" | jq -r 'keys[]' | sort)"
+          TAGS_AFTER="$(jq -r 'keys[]' traefik-sources.json | sort)"
+          TAG="$(comm -13 <(printf '%s\n' "$TAGS_BEFORE") <(printf '%s\n' "$TAGS_AFTER"))"
           BUILD_META=$(make -s log | grep '^BUILD_META=' | cut -d '=' -f2)
           echo "TAG=${TAG}" >> "$GITHUB_ENV"
           echo "BUILD_META=${BUILD_META}" >> "$GITHUB_ENV"
           echo "RELEASE_TAG=${TAG}${BUILD_META}" >> "$GITHUB_ENV"
 
-      - name: Validate release change and release uniqueness
+      - name: Validate Traefik source change and release uniqueness
         id: validate
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -41,13 +42,12 @@ jobs:
             if [[ "${{ github.event.before }}" == "0000000000000000000000000000000000000000" ]]; then
               echo "Push has no previous commit; skipping release"
               SHOULD_RELEASE=false
-            else
-              CHANGED_FILES="$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")"
-              EXPECTED_CHANGED_FILES=$'Dockerfile\nTAG'
-              if [[ "$(sort <<< "$CHANGED_FILES")" != "$EXPECTED_CHANGED_FILES" ]]; then
-                echo "Push did not change both Dockerfile and TAG; skipping release"
-                SHOULD_RELEASE=false
-              fi
+            elif [[ "$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")" != "traefik-sources.json" ]]; then
+              echo "Push changed files other than traefik-sources.json; skipping release"
+              SHOULD_RELEASE=false
+            elif [[ "${TAG}" != v[0-9]* ]]; then
+              echo "Push did not add exactly one Traefik source tag; skipping release"
+              SHOULD_RELEASE=false
             fi
           fi
 

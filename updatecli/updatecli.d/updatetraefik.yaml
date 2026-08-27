@@ -23,25 +23,13 @@ sources:
      command: 'curl -fsSL "https://github.com/traefik/traefik/releases/download/{{ source "traefik" }}/traefik-{{ source "traefik" }}.src.tar.gz" | sha256sum | cut -d'' '' -f1'
 
 targets:
-  tagfile:
-    name: "Bump to latest traefik version in TAG file"
-    kind: file
-    scmid: default
-    disablesourceinput: true
-    spec:
-      file: TAG
-      matchpattern: '(?m)^(.+)$'
-      replacepattern: '{{ source "traefik" }}'
-
-  dockerfileSha:
-    name: "Bump traefik source tarball sha256 in Dockerfile"
-    kind: file
+  traefikSources:
+    name: "Add latest Traefik source checksum"
+    kind: shell
     scmid: default
     sourceid: traefikSrcSha256
     spec:
-      file: Dockerfile
-      matchpattern: '(?m)^ARG TRAEFIK_SRC_SHA256="(.*)"'
-      replacepattern: 'ARG TRAEFIK_SRC_SHA256="{{ source "traefikSrcSha256" }}"'
+      command: 'sh updatecli/scripts/append-traefik-source.sh {{ source "traefik" }}'
 
 scms:
   default:
