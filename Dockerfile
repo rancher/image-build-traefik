@@ -28,6 +28,8 @@ ADD --checksum=sha256:${TRAEFIK_SRC_SHA256} https://github.com/traefik/traefik/r
 RUN tar -xzf /tmp/traefik.src.tar.gz -C $GOPATH/src/${PKG} && \
     rm /tmp/traefik.src.tar.gz
 WORKDIR $GOPATH/src/${PKG}
+COPY go-mod-overrides ./go-mod-overrides
+RUN --mount=type=cache,id=gomod,target=/go/pkg/mod go-mod-overrides.sh ./go-mod-overrides
 
 RUN --mount=type=cache,id=gomod,target=/go/pkg/mod go generate
 # Extract the codename from the traefik Makefile
