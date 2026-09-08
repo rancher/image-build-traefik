@@ -8,7 +8,6 @@ RUN set -x && \
     make \
     ca-certificates \
     tzdata \
-    curl \
     tar
 
 # set up nonroot user
@@ -25,10 +24,8 @@ ARG TRAEFIK_SRC_SHA256
 # static webui files are already generated and included in the tarball.
 # Avoids needing to run a docker-in-docker build to generate the webui files.
 RUN mkdir -p $GOPATH/src/${PKG}
-RUN curl -fsSL "https://github.com/traefik/traefik/releases/download/${TAG}/traefik-${TAG}.src.tar.gz" \
-    -o /tmp/traefik.src.tar.gz && \
-    echo "${TRAEFIK_SRC_SHA256}  /tmp/traefik.src.tar.gz" | sha256sum -c - && \
-    tar -xzf /tmp/traefik.src.tar.gz -C $GOPATH/src/${PKG} && \
+ADD --checksum=sha256:${TRAEFIK_SRC_SHA256} https://github.com/traefik/traefik/releases/download/${TAG}/traefik-${TAG}.src.tar.gz /tmp/traefik.src.tar.gz
+RUN tar -xzf /tmp/traefik.src.tar.gz -C $GOPATH/src/${PKG} && \
     rm /tmp/traefik.src.tar.gz
 WORKDIR $GOPATH/src/${PKG}
 
