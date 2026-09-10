@@ -31,7 +31,7 @@ jobs:
           go-version: 'stable'
 
       - name: Load Secrets from Vault
-        uses: rancher-eio/read-vault-secrets@0da85151ad1f19ed7986c41587e45aac1ace74b6 # v3
+        uses: rancher-eio/read-vault-secrets@dfae8acd43a9e170fca5f90168da22f814fe4e9a # main
         with:
           secrets: |
             secret/data/github/org/${{ github.repository_owner }}/github/renovate-rancher appId | APP_ID ;
