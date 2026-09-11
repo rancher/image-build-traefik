@@ -57,6 +57,7 @@ jobs:
         platforms: linux/amd64
         tag: ${{ github.event.release.tag_name }}
         push-to-public: false
+        skip-buildx-setup: true
         
         prime-repo: rancher
         prime-make-target: image-push-prime-digest
