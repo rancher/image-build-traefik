@@ -32,7 +32,7 @@ jobs:
 
     # For forks, store docker credentials in GHA secrets
     - name: Build and push amd64 digest image 
-      uses: rancher/ecm-distro-tools/actions/publish-image@086cd2f90ed82712e45701441a00e59b95b578c1 # v0.77.1
+      uses: rancher/ecm-distro-tools/actions/publish-image@fdf1c26ea7f6c61b1cc8496a393788d9e9246b98 # v0.77.3
       with:
         image: hardened-traefik
         make-target: image-push-digest
@@ -50,7 +50,7 @@ jobs:
         push-to-prime: ${{ github.repository_owner == 'rancher' }}
 
     - name: Build and push amd64 digest image (Staging)
-      uses: rancher/ecm-distro-tools/actions/publish-image@10ab39987d39be83da6a252c1c3b540e496e0287 # v0.66.0
+      uses: rancher/ecm-distro-tools/actions/publish-image@fdf1c26ea7f6c61b1cc8496a393788d9e9246b98 # v0.77.3
       with:
         image: hardened-traefik
         make-target: image-push-digest
@@ -98,7 +98,7 @@ jobs:
     
     # For forks, store docker credentials in GHA secrets
     - name: Build and push arm64 digest image 
-      uses: rancher/ecm-distro-tools/actions/publish-image@086cd2f90ed82712e45701441a00e59b95b578c1 # v0.77.1
+      uses: rancher/ecm-distro-tools/actions/publish-image@fdf1c26ea7f6c61b1cc8496a393788d9e9246b98 # v0.77.3
       with:
         image: hardened-traefik
         make-target: image-push-digest
@@ -116,7 +116,7 @@ jobs:
         push-to-prime: ${{ github.repository_owner == 'rancher' }}
 
     - name: Build and push arm64 digest image (Staging)
-      uses: rancher/ecm-distro-tools/actions/publish-image@10ab39987d39be83da6a252c1c3b540e496e0287 # v0.66.0
+      uses: rancher/ecm-distro-tools/actions/publish-image@fdf1c26ea7f6c61b1cc8496a393788d9e9246b98 # v0.77.3
       with:
         image: hardened-traefik
         make-target: image-push-digest
@@ -190,7 +190,7 @@ jobs:
 
       - name: Create manifest list and push
         id: push-manifest
-        uses: rancher/ecm-distro-tools/actions/publish-image@086cd2f90ed82712e45701441a00e59b95b578c1 # v0.77.1
+        uses: rancher/ecm-distro-tools/actions/publish-image@fdf1c26ea7f6c61b1cc8496a393788d9e9246b98 # v0.77.3
         env:
           DOCKER_METADATA_OUTPUT_JSON: ${{ steps.meta.outputs.json }}
         with:
@@ -210,7 +210,7 @@ jobs:
 
       - name: Create manifest list and push (Staging)
         id: push-manifest
-        uses: rancher/ecm-distro-tools/actions/publish-image@10ab39987d39be83da6a252c1c3b540e496e0287 # v0.66.0
+        uses: rancher/ecm-distro-tools/actions/publish-image@fdf1c26ea7f6c61b1cc8496a393788d9e9246b98 # v0.77.3
         env:
           DOCKER_METADATA_OUTPUT_JSON: ${{ steps.meta.outputs.json }}
         with:
