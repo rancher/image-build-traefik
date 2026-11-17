@@ -1,7 +1,7 @@
 # rancher/hardened-traefik
 
 
-This repository created a hardened, FIPS 140-2 compatible, binary version of [Traefik](https://github.com/traefik/traefik) and deploys it in a scratch image.
+This repository created a hardened, FIPS 140-3 compatible, binary version of [Traefik](https://github.com/traefik/traefik) and deploys it in a scratch image.
 
 ## Build
 

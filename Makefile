@@ -63,7 +63,7 @@ image-push-prime-digest:
 
 .PHONY: image-scan
 image-scan:
-	trivy --severity $(SEVERITIES) --no-progress --ignore-unfixed $(REPO)/hardened-traefik:$(TAG)
+	trivy image --severity $(SEVERITIES) --no-progress --ignore-unfixed $(REPO)/hardened-traefik:$(TAG)
 
 .PHONY: manifest-push
 manifest-push:

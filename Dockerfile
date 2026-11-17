@@ -17,7 +17,6 @@ RUN addgroup -g 65532 nonroot && \
 # setup the build
 ARG PKG=github.com/traefik/traefik/v3
 ARG TAG
-ARG TARGETARCH
 ARG TRAEFIK_SRC_SHA256
 
 # Download and extract Release src tarball, we do this instead of cloning because the
@@ -35,15 +34,13 @@ RUN --mount=type=cache,id=gomod,target=/go/pkg/mod go generate
 # Extract the codename from the traefik Makefile
 RUN --mount=type=cache,id=gomod,target=/go/pkg/mod \
     CODENAME=$(grep "^CODENAME.*?=" Makefile | cut -d'=' -f2 | tr -d ' ') && \
-    GO_LDFLAGS="-w \
+    CGO_ENABLED=0 GOFIPS140=v1.0.0 go build -trimpath -ldflags "-w \
     -X github.com/traefik/traefik/v3/pkg/version.Version=${TAG} \
     -X github.com/traefik/traefik/v3/pkg/version.Codename=$CODENAME \
     -X github.com/traefik/traefik/v3/pkg/version.BuildDate=$(date -u '+%Y-%m-%d_%I:%M:%S%p')" \
-    go-build-static.sh -gcflags=-trimpath=${GOPATH}/src -o bin/traefik ./cmd/traefik
+    -o bin/traefik ./cmd/traefik
 RUN go-assert-static.sh bin/*
-RUN if [ "${TARGETARCH}" = "amd64" ]; then \
-        go-assert-boring.sh bin/* ; \
-    fi
+RUN go version -m bin/traefik | grep -Eq '^[[:space:]]+build[[:space:]]+GOFIPS140=v1\.0\.0(-[^[:space:]]+)?$'
 RUN install -s bin/* /usr/local/bin
 RUN traefik version
 
